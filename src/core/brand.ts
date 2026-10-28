@@ -1,7 +1,9 @@
 // One codebase, several branded binaries. The entry file (src/bin/<brand>.ts) picks the brand before
 // anything else is imported; every user-facing name, host and storage location comes from here.
 
-export type BrandId = "nextx" | "gymmaster";
+export type BrandId = "nextx" | "gymmaster" | "nextfarm";
+/** Which backend contract the brand talks to. NextFarm has its own assistant and proposal APIs; the other brands share the default one. */
+export type PlatformId = "nextx" | "nextfarm";
 export type EnvName = "prod" | "sandbox";
 
 export interface Endpoints {
@@ -21,6 +23,7 @@ export interface Endpoints {
 
 export interface Brand {
   id: BrandId;
+  platform: PlatformId;
   /** Command users type. */
   bin: string;
   /** Product name shown in the terminal. */
@@ -35,6 +38,14 @@ export interface Brand {
   envPrefix: string;
   /** Mobile app name for QR login. */
   mobileApp: string;
+  /** A typical first question, shown in hints. */
+  example: { vi: string; en: string };
+  /** A real request for `api --help`, valid on this brand's gateway. */
+  apiExample: string;
+  /** Sign-in methods the brand's server does not offer yet; the CLI says so instead of failing mid-flow. */
+  notYet?: ("device" | "ci")[];
+  /** Where an admin allows a CI repository, after the web app address. */
+  ciSettings: { vi: string; en: string };
   /** Modules this brand exposes. null = all. */
   modules: string[] | null;
   env: Record<EnvName, Endpoints>;
@@ -44,6 +55,7 @@ export interface Brand {
 // <brand:gymmaster>
 const GYMMASTER: Brand = {
   id: "gymmaster",
+  platform: "nextx",
   bin: "gymmaster",
   name: "Gym Master",
   aiName: "Gym Master AI",
@@ -51,6 +63,9 @@ const GYMMASTER: Brand = {
   clientId: "gymmaster-cli",
   envPrefix: "GYMMASTER",
   mobileApp: "Gym Master",
+  example: { vi: "hội viên sắp hết hạn tuần này", en: "members expiring this week" },
+  apiExample: "GET /iam/auth/me",
+  ciSettings: { vi: "Thiết lập › Ứng dụng & API › CI", en: "Settings › Apps & API › CI" },
   modules: ["gym", "payment", "einvoice", "comm", "marketing"],
   env: {
     prod: {
@@ -72,6 +87,7 @@ const GYMMASTER: Brand = {
   },
 };
 // </brand:gymmaster>
+
 
 // Exported trees keep only their own brand (scripts/export.sh strips the other block and its line here).
 const BRANDS: Partial<Record<BrandId, Brand>> = {

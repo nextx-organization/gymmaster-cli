@@ -39,7 +39,7 @@ npm install -g @gymmaster/cli
 ```bash
 gymmaster login          # browser, or --qr over SSH
 gymmaster                # open the chat
-gymmaster -p "yesterday's revenue by branch"
+gymmaster -p "members expiring this week"
 gymmaster doctor
 ```
 
