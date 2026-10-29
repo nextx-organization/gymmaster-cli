@@ -73,7 +73,7 @@ const GYMMASTER: Brand = {
   example: { vi: "hội viên sắp hết hạn tuần này", en: "members expiring this week" },
   apiExample: "GET /iam/auth/me",
   ciSettings: { vi: "Thiết lập › Ứng dụng & API › CI", en: "Settings › Apps & API › CI" },
-  // Ngành hẹp dùng đồ của ngành rộng (29/10/2026): mọi phân hệ, kể cả CRM / Bán hàng.
+  // A niche brand rides on the broad one: every module is available, CRM and Sales included.
   modules: null,
   hiddenModules: ["golf"],
   env: {
