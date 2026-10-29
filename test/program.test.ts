@@ -2,7 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { brand, setBrand } from "../src/core/brand.js";
 
-/** In a NextFarm-only tree the default brand is gone and these cases do not apply. */
+/** In a tree without the default brand these cases do not apply. */
 const onDefaultPlatform = () => { setBrand("nextx"); return brand().platform === "nextx"; };
 const skip = { skip: !onDefaultPlatform() };
 
@@ -28,7 +28,6 @@ test("gợi ý Tab: lệnh con và cờ", async () => {
   assert.ok(completions(p, ["login", "--q"]).includes("--qr"));
 });
 
-// <brand:gymmaster>
 test("bản gymmaster không có chữ NextX/CRM trong trợ giúp", async () => {
   setBrand("gymmaster");
   const { buildProgram } = await import("../src/program.js");
@@ -38,7 +37,6 @@ test("bản gymmaster không có chữ NextX/CRM trong trợ giúp", async () =>
   assert.equal(/\bCRM\b/.test(text), false, text.match(/.{40}CRM.{40}/)?.[0]);
   setBrand("nextx");
 });
-// </brand:gymmaster>
 
 test("cờ chung đặt sau lệnh con vẫn nhận (nextx login --sandbox)", async () => {
   setBrand("nextx");

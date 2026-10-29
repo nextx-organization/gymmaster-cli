@@ -1,9 +1,11 @@
 // One codebase, several branded binaries. The entry file (src/bin/<brand>.ts) picks the brand before
 // anything else is imported; every user-facing name, host and storage location comes from here.
 
-export type BrandId = "nextx" | "gymmaster" | "nextfarm";
-/** Which backend contract the brand talks to. NextFarm has its own assistant and proposal APIs; the other brands share the default one. */
-export type PlatformId = "nextx" | "nextfarm";
+export type BrandId = "nextx" | "gymmaster"
+  ;
+/** Which backend contract the brand talks to. A platform may have its own assistant and proposal APIs; most brands share the default one. */
+export type PlatformId = "nextx"
+  ;
 export type EnvName = "prod" | "sandbox";
 
 export interface Endpoints {
@@ -38,6 +40,8 @@ export interface Brand {
   envPrefix: string;
   /** Mobile app name for QR login. */
   mobileApp: string;
+  /** Examples shown in help: permission codes for `keys create --scopes`, and what a CI write policy covers. */
+  examples: { scopes: string; ciKinds: string };
   /** A typical first question, shown in hints. */
   example: { vi: string; en: string };
   /** A real request for `api --help`, valid on this brand's gateway. */
@@ -52,17 +56,17 @@ export interface Brand {
 }
 
 
-// <brand:gymmaster>
 const GYMMASTER: Brand = {
   id: "gymmaster",
   platform: "nextx",
   bin: "gymmaster",
   name: "Gym Master",
   aiName: "Gym Master AI",
-  pkg: "@gymmaster/cli",
+  pkg: "@gymmasterai/cli",
   clientId: "gymmaster-cli",
   envPrefix: "GYMMASTER",
   mobileApp: "Gym Master",
+  examples: { scopes: "gym.members.view,gym.contracts.view", ciKinds: "gym.members.create" },
   example: { vi: "hội viên sắp hết hạn tuần này", en: "members expiring this week" },
   apiExample: "GET /iam/auth/me",
   ciSettings: { vi: "Thiết lập › Ứng dụng & API › CI", en: "Settings › Apps & API › CI" },
@@ -86,12 +90,11 @@ const GYMMASTER: Brand = {
     },
   },
 };
-// </brand:gymmaster>
 
 
 // Exported trees keep only their own brand (scripts/export.sh strips the other block and its line here).
 const BRANDS: Partial<Record<BrandId, Brand>> = {
-  gymmaster: GYMMASTER, // <brand-line:gymmaster>
+  gymmaster: GYMMASTER,
 };
 
 let current: Brand = Object.values(BRANDS)[0]!;

@@ -1,6 +1,6 @@
 {
-  "name": "@gymmaster/cli",
-  "version": "0.2.0",
+  "name": "@gymmasterai/cli",
+  "version": "0.3.1",
   "description": "Gym Master in your terminal: chat with Gym Master AI on your workspace data, call the API, manage keys and webhooks",
   "keywords": [
     "gymmaster",

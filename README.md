@@ -31,7 +31,7 @@ brew install nextx-organization/tap/gymmaster
 npm (Node 20+):
 
 ```bash
-npm install -g @gymmaster/cli
+npm install -g @gymmasterai/cli
 ```
 
 ## Quick start
