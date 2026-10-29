@@ -28,15 +28,15 @@ test("gợi ý Tab: lệnh con và cờ", async () => {
   assert.ok(completions(p, ["login", "--q"]).includes("--qr"));
 });
 
-test("bản gymmaster không có chữ NextX/CRM trong trợ giúp", async () => {
+test("bản gymmaster không có chữ NextX trong trợ giúp (CRM / Bán hàng được hiện)", async () => {
   setBrand("gymmaster");
   const { buildProgram } = await import("../src/program.js");
   const { helpTree } = await import("../src/commands/help.js");
   const text = JSON.stringify(helpTree(buildProgram()));
   assert.equal(/NextX/.test(text), false, text.match(/.{40}NextX.{40}/)?.[0]);
-  assert.equal(/\bCRM\b/.test(text), false, text.match(/.{40}CRM.{40}/)?.[0]);
   setBrand("nextx");
 });
+
 
 test("cờ chung đặt sau lệnh con vẫn nhận (nextx login --sandbox)", async () => {
   setBrand("nextx");

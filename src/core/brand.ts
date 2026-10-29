@@ -1,7 +1,8 @@
 // One codebase, several branded binaries. The entry file (src/bin/<brand>.ts) picks the brand before
 // anything else is imported; every user-facing name, host and storage location comes from here.
 
-export type BrandId = "nextx" | "gymmaster"
+export type BrandId = "nextx"
+  | "gymmaster"
   ;
 /** Which backend contract the brand talks to. A platform may have its own assistant and proposal APIs; most brands share the default one. */
 export type PlatformId = "nextx"
@@ -41,7 +42,7 @@ export interface Brand {
   /** Mobile app name for QR login. */
   mobileApp: string;
   /** Examples shown in help: permission codes for `keys create --scopes`, and what a CI write policy covers. */
-  examples: { scopes: string; ciKinds: string };
+  examples: { scopes: string; ciKinds: string; modules: string };
   /** A typical first question, shown in hints. */
   example: { vi: string; en: string };
   /** A real request for `api --help`, valid on this brand's gateway. */
@@ -50,8 +51,10 @@ export interface Brand {
   notYet?: ("device" | "ci")[];
   /** Where an admin allows a CI repository, after the web app address. */
   ciSettings: { vi: string; en: string };
-  /** Modules this brand exposes. null = all. */
+  /** Modules this brand exposes. null = all except `hiddenModules`. */
   modules: string[] | null;
+  /** Modules never shown: a broad brand hides the niche products that sell on their own; a niche brand shows everything else. */
+  hiddenModules: string[];
   env: Record<EnvName, Endpoints>;
 }
 
@@ -66,11 +69,13 @@ const GYMMASTER: Brand = {
   clientId: "gymmaster-cli",
   envPrefix: "GYMMASTER",
   mobileApp: "Gym Master",
-  examples: { scopes: "gym.members.view,gym.contracts.view", ciKinds: "gym.members.create" },
+  examples: { scopes: "gym.members.view,gym.contracts.view", ciKinds: "gym.members.create", modules: "gym, crm, sales…" },
   example: { vi: "hội viên sắp hết hạn tuần này", en: "members expiring this week" },
   apiExample: "GET /iam/auth/me",
   ciSettings: { vi: "Thiết lập › Ứng dụng & API › CI", en: "Settings › Apps & API › CI" },
-  modules: ["gym", "payment", "einvoice", "comm", "marketing"],
+  // Ngành hẹp dùng đồ của ngành rộng (29/10/2026): mọi phân hệ, kể cả CRM / Bán hàng.
+  modules: null,
+  hiddenModules: ["golf"],
   env: {
     prod: {
       api: "https://api.nextx.vn",
@@ -112,4 +117,11 @@ export function brand(): Brand {
 export function envVar(name: string): string | undefined {
   const v = process.env[`${current.envPrefix}_${name}`];
   return v === undefined || v === "" ? undefined : v;
+}
+
+/** Whether a module (or `module:scope`, `module.resource.action`) is shown by the current brand. */
+export function visibleModule(code: string): boolean {
+  const m = code.split(/[.:]/)[0]!.toLowerCase();
+  const b = brand();
+  return !b.hiddenModules.includes(m) && (!b.modules || b.modules.includes(m));
 }

@@ -25,7 +25,7 @@ irm https://developers.gymmaster.vn/install.ps1 | iex
 Homebrew:
 
 ```bash
-brew install nextx-organization/tap/gymmaster
+brew install nextx-organization/nextx/gymmaster
 ```
 
 npm (Node 20+):
